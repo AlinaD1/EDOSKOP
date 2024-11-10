@@ -13,12 +13,6 @@
         android:layout_height="wrap_content"
         android:text="Добро пожаловать, !" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <Button
         android:id="@+id/favoritesButton"
         android:layout_width="match_parent"
