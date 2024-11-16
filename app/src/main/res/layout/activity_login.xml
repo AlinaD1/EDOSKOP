@@ -1,34 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:padding="16dp">
-
-<EditText
-    android:id="@+id/emailEditText"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Почта" />
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/backgroundColor"
+    tools:context=".MainActivity">
 
-<EditText
-    android:id="@+id/passwordEditText"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Пароль"
-    android:inputType="textPassword" />
+    <!-- Верхняя панель с заголовком на овальном фоне -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-<Button
-    android:id="@+id/loginButton"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Войти" />
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/cardBackgroundColor"
+            android:layout_gravity="center"
+            android:padding="12dp"
+            app:cardCornerRadius="50dp"
+            app:cardElevation="6dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp">
 
-<Button
-    android:id="@+id/registerButton"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Зарегистрироваться" />
+            <TextView
+                android:layout_width="333dp"
+                android:layout_height="69dp"
+                android:text="           Вход"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Поле ввода почты с иконкой и закругленными углами -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Почта"
+        android:layout_marginTop="8dp"
+        app:endIconMode="clear_text"
+        android:padding="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textSize="16sp"
+            android:padding="12dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Поле ввода пароля с иконкой и закругленными углами -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Пароль"
+        android:layout_marginTop="16dp"
+        app:endIconMode="password_toggle"
+        android:padding="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textSize="16sp"
+            android:padding="12dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Кнопка для входа с современным дизайном -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/buttonColor"
+        android:cornerRadius="12dp"
+        android:padding="16dp"
+        android:text="Войти"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:icon="@drawable/ic_login"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp" />
+
+    <!-- Кнопка для регистрации с современным дизайном -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/registerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/secondaryButtonColor"
+        android:cornerRadius="12dp"
+        android:padding="16dp"
+        android:text="Зарегистрироваться"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:icon="@drawable/ic_register"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp" />
+
+    <!-- Пространство для разделения контента и иконки приложения -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Иконка приложения внизу экрана -->
+    <ImageView
+        android:id="@+id/appIcon"
+        android:layout_width="176dp"
+        android:layout_height="155dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/app_icon" />
 </LinearLayout>
-
