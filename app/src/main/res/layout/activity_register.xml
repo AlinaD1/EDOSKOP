@@ -109,9 +109,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/buttonColor"
-        android:cornerRadius="12dp"
+        app:cornerRadius="12dp"
         android:padding="16dp"
         android:text="Зарегистрироваться"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+ />
 </LinearLayout>
