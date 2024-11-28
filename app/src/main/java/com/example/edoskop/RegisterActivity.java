@@ -28,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
 
-        findViewById(R.id.registerButton).setOnClickListener(view -> registerUser());
+        findViewById(R.id.loginButton).setOnClickListener(view -> registerUser());
     }
 
     private void registerUser() {
