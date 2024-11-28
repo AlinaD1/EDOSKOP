@@ -22,18 +22,21 @@ android:background="@color/backgroundColor">
         android:text="Профиль"
         android:textColor="@color/primaryTextColor"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginEnd="160dp" />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:backgroundTint="@color/buttonColor"
-        app:cornerRadius="12dp"
         android:padding="8dp"
         android:text="Выйти"
         android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:cornerRadius="12dp" />
 </LinearLayout>
 
 <!-- Заголовок для списка рецептов -->
