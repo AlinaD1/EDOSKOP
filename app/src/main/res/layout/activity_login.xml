@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/cardBackgroundColor"
+            app:cardBackgroundColor="@color/cardBackgroundColor"
             android:layout_gravity="center"
             android:padding="12dp"
             app:cardCornerRadius="50dp"
@@ -38,6 +39,7 @@
                 android:textSize="40sp"
                 android:textStyle="bold" />
         </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
 
     <!-- Поле ввода почты с иконкой и закругленными углами -->
@@ -56,6 +58,7 @@
             android:inputType="textEmailAddress"
             android:textSize="16sp"
             android:padding="12dp" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Поле ввода пароля с иконкой и закругленными углами -->
@@ -74,6 +77,7 @@
             android:inputType="textPassword"
             android:textSize="16sp"
             android:padding="12dp" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Кнопка для входа с современным дизайном -->
@@ -83,14 +87,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/buttonColor"
-        android:cornerRadius="12dp"
+        app:cornerRadius="12dp"
         android:padding="16dp"
         android:text="Войти"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:icon="@drawable/ic_login"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp" />
+        app:iconGravity="textStart" />
 
     <!-- Кнопка для регистрации с современным дизайном -->
     <com.google.android.material.button.MaterialButton
@@ -98,15 +100,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:backgroundTint="@color/secondaryButtonColor"
-        android:cornerRadius="12dp"
+        app:cornerRadius="12dp"
         android:padding="16dp"
         android:text="Зарегистрироваться"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:icon="@drawable/ic_register"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp" />
+        app:iconGravity="textStart" />
 
     <!-- Пространство для разделения контента и иконки приложения -->
     <Space
@@ -122,4 +121,5 @@
         android:layout_gravity="center"
         android:layout_marginBottom="16dp"
         android:src="@drawable/app_icon" />
+
 </LinearLayout>

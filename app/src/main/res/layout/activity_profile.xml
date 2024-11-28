@@ -38,12 +38,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/buttonColor"
-        android:cornerRadius="16dp"
+        app:cornerRadius="16dp"
         android:padding="16dp"
         android:text="Понравившиеся рецепты"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:icon="@drawable/ic_favorites"
         app:iconGravity="textStart"
         app:iconPadding="8dp" />
 
@@ -53,12 +52,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/buttonColor"
-        android:cornerRadius="16dp"
+        app:cornerRadius="16dp"
         android:padding="16dp"
         android:text="Мои рецепты"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:icon="@drawable/ic_my_recipes"
         app:iconGravity="textStart"
         app:iconPadding="8dp" />
 
@@ -68,12 +66,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/buttonColor"
-        android:cornerRadius="16dp"
+        app:cornerRadius="16dp"
         android:padding="16dp"
         android:text="Поиск рецепта"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:icon="@drawable/ic_search"
         app:iconGravity="textStart"
         app:iconPadding="8dp" />
 
@@ -96,7 +93,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:cardBackgroundColor="@color/cardBackgroundColor"
+            app:cardBackgroundColor="@color/cardBackgroundColor"
             app:cardCornerRadius="75dp"
             app:cardElevation="8dp">
 
