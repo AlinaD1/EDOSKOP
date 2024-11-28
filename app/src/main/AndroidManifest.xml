@@ -43,6 +43,9 @@
         <activity
             android:name=".SearchRecipesActivity"
             android:exported="true" />
+        <activity
+            android:name=".AddRecipeActivity"
+            android:exported="true" />
 
     </application>
     <uses-permission android:name="android.permission.CAMERA"/>
