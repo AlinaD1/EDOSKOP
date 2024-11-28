@@ -13,7 +13,6 @@ android:background="@color/backgroundColor">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="space_between"
     android:padding="10dp">
 
     <TextView
@@ -22,18 +21,21 @@ android:background="@color/backgroundColor">
         android:text="Профиль"
         android:textColor="@color/primaryTextColor"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginEnd="160dp" />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:backgroundTint="@color/buttonColor"
-        app:cornerRadius="12dp"
         android:padding="8dp"
         android:text="Выйти"
         android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:cornerRadius="12dp" />
 </LinearLayout>
 
 <!-- Заголовок для списка рецептов -->
@@ -71,7 +73,7 @@ android:background="@color/backgroundColor">
                 android:layout_height="80dp"
                 android:layout_marginEnd="8dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/recipe_image_placeholder" />
+                 />
 
             <TextView
                 android:layout_width="0dp"
@@ -95,7 +97,7 @@ android:background="@color/backgroundColor">
                 android:layout_height="80dp"
                 android:layout_marginEnd="8dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/recipe_image_placeholder" />
+                 />
 
             <TextView
                 android:layout_width="0dp"
@@ -136,25 +138,25 @@ android:background="@color/backgroundColor">
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="8dp"
-        android:src="@drawable/ic_heart" />
+         />
 
     <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="8dp"
-        android:src="@drawable/ic_message" />
+         />
 
     <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="8dp"
-        android:src="@drawable/ic_play" />
+         />
 
     <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="8dp"
-        android:src="@drawable/ic_profile" />
+         />
 </LinearLayout>
 </LinearLayout>
 

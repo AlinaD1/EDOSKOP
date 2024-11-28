@@ -1,117 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="@color/backgroundColor"
     tools:context=".MainActivity">
 
-    <!-- Верхняя панель с заголовком на полукруглом фоне -->
+    <!-- Левые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="-50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="-50dp"
+        android:translationY="50dp" />
+
+    <!-- Правые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="50dp"
+        android:translationY="50dp" />
+
+    <!-- Основное содержимое -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="148dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/cardBackgroundColor"
-            android:padding="16dp"
-            app:cardCornerRadius="50dp"
-            app:cardElevation="4dp">
-
-            <TextView
-                android:layout_width="428dp"
-                android:layout_height="70dp"
-                android:text="     Регистрация"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="40sp"
-                android:textStyle="bold" />
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <!-- Центральная часть с формой ввода -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="24dp">
+        android:padding="16dp">
 
-        <!-- Поле ввода логина с иконкой -->
-        <com.google.android.material.textfield.TextInputLayout
+        <!-- Верхняя панель с заголовком -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Логин"
-            android:padding="8dp"
-            app:endIconMode="clear_text">
+            android:layout_height="148dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/usernameEditText"
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/backgroundColor"
+                android:padding="16dp"
+                app:cardCornerRadius="50dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:layout_width="428dp"
+                    android:layout_height="70dp"
+                    android:text="     Регистрация"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="40sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Центральная часть с формой ввода -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingTop="24dp">
+
+            <!-- Поле ввода логина с иконкой -->
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textSize="16sp"
-                android:padding="12dp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:hint="Логин"
+                android:padding="8dp"
+                app:endIconMode="clear_text">
 
-        <!-- Поле ввода почты с иконкой -->
-        <com.google.android.material.textfield.TextInputLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/usernameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textSize="16sp"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Поле ввода почты с иконкой -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Почта"
+                android:padding="8dp"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textSize="16sp"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Поле ввода пароля с иконкой -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Пароль"
+                android:padding="8dp"
+                app:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:textSize="16sp"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Кнопка регистрации -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Почта"
-            android:padding="8dp"
-            app:endIconMode="clear_text">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/emailEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:textSize="16sp"
-                android:padding="12dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Поле ввода пароля с иконкой -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Пароль"
-            android:padding="8dp"
-            app:endIconMode="password_toggle">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/passwordEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:textSize="16sp"
-                android:padding="12dp" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:backgroundTint="@color/buttonColor"
+            app:cornerRadius="12dp"
+            android:padding="16dp"
+            android:text="Зарегистрироваться"
+            android:textColor="@android:color/white" />
     </LinearLayout>
-
-    <!-- Кнопка регистрации -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/buttonColor"
-        app:cornerRadius="12dp"
-        android:padding="16dp"
-        android:text="Зарегистрироваться"
-        android:textColor="@android:color/white"
- />
-</LinearLayout>
+</FrameLayout>

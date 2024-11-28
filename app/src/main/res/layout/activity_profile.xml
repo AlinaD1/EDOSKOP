@@ -1,110 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/backgroundColor"
-    android:padding="16dp"
     tools:context=".MainActivity">
 
-    <!-- Приветственное сообщение в CardView с тенями -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/cardBackgroundColor"
-        android:padding="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp">
-
-        <TextView
-            android:id="@+id/welcomeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text=" Добро пожаловать!"
-            android:textColor="@color/primaryTextColor"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-    </androidx.cardview.widget.CardView>
-
-    <!-- Кнопки с современным дизайном -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/favoritesButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="@color/buttonColor"
-        app:cornerRadius="16dp"
-        android:padding="16dp"
-        android:text="Понравившиеся рецепты"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/myRecipesButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="@color/buttonColor"
-        app:cornerRadius="16dp"
-        android:padding="16dp"
-        android:text="Мои рецепты"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/searchRecipesButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="@color/buttonColor"
-        app:cornerRadius="16dp"
-        android:padding="16dp"
-        android:text="Поиск рецепта"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp" />
-
-    <!-- Разделитель для отделения кнопок от нижней части -->
+    <!-- Верхний левый угол -->
+    <!-- Верхний левый угол -->
     <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="left|top"
+        android:background="@color/greenCornerColor"
+        android:rotation="-45"
+        android:translationX="-60dp"
+        android:translationY="-60dp" />
 
-    <!-- Овальный контейнер для иконки приложения внизу -->
+    <!-- Верхний правый угол -->
+    <View
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="right|top"
+        android:background="#66BB6A"
+        android:rotation="45"
+        android:translationX="60dp"
+        android:translationY="-60dp" />
+
+    <!-- Нижний левый угол -->
+    <View
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="left|bottom"
+        android:background="#66BB6A"
+        android:rotation="45"
+        android:translationX="-60dp"
+        android:translationY="60dp" />
+
+    <!-- Нижний правый угол -->
+    <View
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="right|bottom"
+        android:background="#8C3A3A"
+        android:rotation="90"
+        android:translationX="60dp"
+        android:translationY="60dp" />
+    <!-- Основное содержимое -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
+        android:padding="16dp"
+        android:gravity="center"
+        android:background="@color/backgroundColor">
 
+        <!-- Приветственное сообщение -->
         <androidx.cardview.widget.CardView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            app:cardCornerRadius="75dp"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/cardBackgroundColor"
+            android:padding="16dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="8dp">
 
-            <!-- Иконка приложения -->
-            <ImageView
-                android:id="@+id/appIcon"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="24dp"
-                android:src="@drawable/app_icon"
-                android:scaleType="centerInside" />
+            <TextView
+                android:id="@+id/welcomeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Добро пожаловать!"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="26sp"
+                android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
+
+        <!-- Кнопки -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/favoritesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/buttonColor"
+            app:cornerRadius="16dp"
+            android:padding="16dp"
+            android:text="Понравившиеся рецепты"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/myRecipesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/buttonColor"
+            app:cornerRadius="16dp"
+            android:padding="16dp"
+            android:text="Мои рецепты"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/searchRecipesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/buttonColor"
+            app:cornerRadius="16dp"
+            android:padding="16dp"
+            android:text="Поиск рецепта"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <!-- Разделитель -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Овальная иконка приложения -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                app:cardBackgroundColor="@color/cardBackgroundColor"
+                app:cardCornerRadius="75dp"
+                app:cardElevation="8dp">
+
+                <ImageView
+                    android:id="@+id/appIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="24dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/app_icon" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>
