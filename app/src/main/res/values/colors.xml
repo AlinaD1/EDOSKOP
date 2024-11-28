@@ -6,4 +6,7 @@
     <color name="primaryTextColor">#212121</color>
     <color name="buttonColor">#EB8C17</color>
     <color name="cardBackgroundColor">#FFCC80</color>
+    <color name="greenCornerColor">#66BB6A</color>
+
+
 </resources>
