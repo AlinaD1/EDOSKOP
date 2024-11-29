@@ -46,7 +46,6 @@
         android:translationX="75dp"
         android:translationY="75dp" />
 
-
     <!-- Основное содержимое -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -150,6 +149,18 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:backgroundTint="#EB8C17"
+            app:cornerRadius="12dp"
+            app:iconGravity="textStart" />
+
+        <!-- Кнопка "Забыли пароль?" -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/forgotPasswordButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Забыли пароль?"
+            android:textColor="#66BB6A"
+            android:textSize="16sp"
             app:cornerRadius="12dp"
             app:iconGravity="textStart" />
 
