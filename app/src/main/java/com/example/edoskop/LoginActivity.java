@@ -25,22 +25,27 @@ public class LoginActivity extends AppCompatActivity {
         // Проверяем, авторизован ли пользователь
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            navigateToProfile();  // Переход на главный экран, если уже вошел
+            // Если пользователь авторизован, проверяем подтверждение почты
+            if (currentUser.isEmailVerified()) {
+                navigateToProfile();  // Если почта подтверждена, переходим в профиль
+            } else {
+                Toast.makeText(this, "Пожалуйста, подтвердите ваш email", Toast.LENGTH_SHORT).show();
+                mAuth.signOut();  // Выход из аккаунта, если почта не подтверждена
+            }
         } else {
-            setContentView(R.layout.activity_login);  // Загружаем экран логина
-
+            // Загружаем экран логина
+            setContentView(R.layout.activity_login);
             emailEditText = findViewById(R.id.emailEditText);
             passwordEditText = findViewById(R.id.passwordEditText);
 
             findViewById(R.id.loginButton).setOnClickListener(view -> loginUser());
-            findViewById(R.id.registerButton).setOnClickListener(view ->
-                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+            findViewById(R.id.registerButton).setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
         }
 
         forgotPasswordButton = findViewById(R.id.forgotPasswordButton); // Инициализация кнопки
-        // Обработчик нажатия на кнопку "Забыли пароль?"
-        forgotPasswordButton.setOnClickListener(view -> resetPassword());
+        forgotPasswordButton.setOnClickListener(view -> resetPassword());  // Обработчик нажатия на кнопку "Забыли пароль?"
     }
+
     private void loginUser() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
@@ -53,18 +58,28 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        navigateToProfile();  // Переход на экран профиля
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            // Проверяем, подтверждена ли почта
+                            if (user.isEmailVerified()) {
+                                navigateToProfile();  // Переход на экран профиля, если почта подтверждена
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Пожалуйста, подтвердите свой email", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     } else {
                         Toast.makeText(LoginActivity.this, "Ошибка авторизации", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
     private void navigateToProfile() {
         Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Очищаем историю переходов
         startActivity(intent);
         finish();
     }
+
     // Функция для сброса пароля
     private void resetPassword() {
         String email = emailEditText.getText().toString();
@@ -84,4 +99,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 }
+
+
 

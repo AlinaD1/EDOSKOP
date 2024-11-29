@@ -56,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                     });
 
-                            // Переход на экран входа
+                            // Переход на экран логина
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish(); // Закрытие текущей активности
@@ -68,3 +68,5 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 }
+
+
