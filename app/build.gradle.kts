@@ -42,6 +42,13 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    implementation ("org.tensorflow:tensorflow-lite:2.9.0")
+    implementation ("com.google.android.material:material:1.4.0")
+
+
+    // PyTorch Dependencies
+    implementation("org.pytorch:pytorch_android:1.10.0") // Убедитесь, что версия актуальна
+    implementation("org.pytorch:pytorch_android_torchvision:1.10.0") // Для использования torchvision (если нужно)
 }
 
 // Применение плагина Google Services для корректной интеграции Firebase

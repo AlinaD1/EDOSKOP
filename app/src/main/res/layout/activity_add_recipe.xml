@@ -1,26 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    tools:context=".AddRecipeActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Добавить рецепт"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/recipeNameInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Название рецепта" />
+    <!-- Поле для фото -->
+    <ImageView
+        android:id="@+id/recipeImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_add_photo"
+        app:layout_constraintBottom_toTopOf="@+id/photoButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:layout_width="match_parent"
+        android:id="@+id/photoButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Сохранить" />
-</LinearLayout>
+        android:text="Добавить фото"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipeImageView"
+        app:layout_constraintBottom_toTopOf="@id/recipeNameEditText" />
+
+    <!-- Поле для названия рецепта -->
+    <EditText
+        android:id="@+id/recipeNameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Название рецепта"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/photoButton"
+        app:layout_constraintBottom_toTopOf="@id/ingredientsListView" />
+
+    <!-- Список ингредиентов -->
+    <ListView
+        android:id="@+id/ingredientsListView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipeNameEditText"
+        app:layout_constraintBottom_toTopOf="@id/descriptionEditText" />
+
+    <!-- Поле для описания рецепта -->
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Описание"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ingredientsListView"
+        app:layout_constraintBottom_toTopOf="@id/saveButton" />
+
+    <!-- Кнопка сохранения -->
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Сохранить рецепт"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descriptionEditText"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

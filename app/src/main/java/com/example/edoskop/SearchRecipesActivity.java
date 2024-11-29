@@ -38,6 +38,9 @@ public class SearchRecipesActivity extends AppCompatActivity {
         adapter = new RecognizedItemsAdapter(this, recognizedItems);
         recognizedItemsListView.setAdapter(adapter);
 
+        // Загружаем модель нейросети
+        NeuralNetworkHelper.loadModel(getApplicationContext());
+
         openCameraButton.setOnClickListener(v -> openCamera());
         uploadFromGalleryButton.setOnClickListener(v -> pickImageFromGallery());
     }
@@ -60,32 +63,42 @@ public class SearchRecipesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
+            Bitmap imageBitmap = null;
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                capturedImageView.setImageBitmap(imageBitmap);
-                recognizeProducts(imageBitmap);
+                imageBitmap = (Bitmap) extras.get("data");
             } else if (requestCode == REQUEST_IMAGE_PICK) {
                 Uri selectedImage = data.getData();
                 try {
                     InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                    Bitmap imageBitmap = BitmapFactory.decodeStream(imageStream);
-                    capturedImageView.setImageBitmap(imageBitmap);
-                    recognizeProducts(imageBitmap);
+                    imageBitmap = BitmapFactory.decodeStream(imageStream);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Ошибка загрузки изображения", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            if (imageBitmap != null) {
+                capturedImageView.setImageBitmap(imageBitmap);
+                recognizeProducts(imageBitmap);
+            }
         }
     }
 
     private void recognizeProducts(Bitmap image) {
-        // Здесь вы можете передать изображение в YOLO или другую нейросеть для распознавания объектов
-        List<String> detectedProducts = NeuralNetworkHelper.recognize(image);
+        // Преобразуем изображение в формат, который поддерживает нейросеть
+        Bitmap resizedImage = NeuralNetworkHelper.resizeImage(image); // Метод для изменения размера изображения
+        List<String> detectedProducts = NeuralNetworkHelper.recognize(resizedImage);
+
+        // Очищаем список и добавляем распознанные продукты
         recognizedItems.clear();
         recognizedItems.addAll(detectedProducts);
+
+        // Обновляем адаптер списка, чтобы отобразить результаты
         adapter.notifyDataSetChanged();
     }
 }
+
+
+
 

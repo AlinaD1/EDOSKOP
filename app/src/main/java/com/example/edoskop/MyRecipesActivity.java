@@ -44,3 +44,4 @@ public class MyRecipesActivity extends AppCompatActivity {
         });
     }
 }
+
