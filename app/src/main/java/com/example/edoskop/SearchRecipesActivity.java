@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,9 @@ public class SearchRecipesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_recipes);
+
+        // Инициализируем модель
+        NeuralNetworkHelper.loadModel(this);
 
         Button openCameraButton = findViewById(R.id.openCameraButton);
         Button uploadFromGalleryButton = findViewById(R.id.uploadFromGalleryButton);
@@ -81,11 +85,12 @@ public class SearchRecipesActivity extends AppCompatActivity {
     }
 
     private void recognizeProducts(Bitmap image) {
-        // Здесь вы можете передать изображение в YOLO или другую нейросеть для распознавания объектов
+        // Передаем изображение в нейросеть
         List<String> detectedProducts = NeuralNetworkHelper.recognize(image);
         recognizedItems.clear();
         recognizedItems.addAll(detectedProducts);
         adapter.notifyDataSetChanged();
     }
 }
+
 
