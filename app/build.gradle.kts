@@ -32,16 +32,23 @@ android {
 }
 
 dependencies {
+    // Android стандартные зависимости
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    // Firebase Authentication и Realtime Database
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
+
+    // Firebase UI для работы с RecyclerView
+    implementation("com.firebaseui:firebase-ui-database:8.0.1")
+
+    // Тестовые зависимости
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
 }
 
 // Применение плагина Google Services для корректной интеграции Firebase
