@@ -1,21 +1,3 @@
-//package com.example.edoskop;
-
-//import android.graphics.Bitmap;
-//import java.util.ArrayList;
-//import java.util.List;
-
-//public class NeuralNetworkHelper {
-  //  public static List<String> recognize(Bitmap image) {
- //       List<String> products = new ArrayList<>();
-
-   //     // Здесь вы вызываете YOLO модель, натренированную на распознавание продуктов
-        // Пример: products.add("яблоко"); products.add("банан");
-
-    //    products.add("яблоко");
-    //    products.add("банан");
-    //    return products;
-   // }
-//}
 package com.example.edoskop;
 
 import android.content.Context;
@@ -37,50 +19,64 @@ public class NeuralNetworkHelper {
 
     private static Module model;
 
-    // Загружаем модель из assets
+    // Загрузка модели из папки assets
     public static void loadModel(Context context) {
         try {
             String modelPath = assetFilePath(context, "yolov8x.pt");
             model = Module.load(modelPath);
+            Log.i("NeuralNetworkHelper", "Модель успешно загружена: " + modelPath);
         } catch (Exception e) {
             Log.e("NeuralNetworkHelper", "Ошибка загрузки модели", e);
         }
     }
 
-    // Основная функция для распознавания продуктов
+    // Распознавание продуктов
     public static List<String> recognize(Bitmap bitmap) {
         List<String> detectedProducts = new ArrayList<>();
         if (model == null) {
-            Log.e("NeuralNetworkHelper", "Модель не загружена");
+            Log.e("NeuralNetworkHelper", "Модель не загружена. Проверьте вызов loadModel.");
             return detectedProducts;
         }
 
-        // Преобразуем изображение в Tensor
-        Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
-                bitmap,
-                TensorImageUtils.TORCHVISION_NORM_MEAN_RGB,
-                TensorImageUtils.TORCHVISION_NORM_STD_RGB
-        );
+        try {
+            // Преобразуем изображение в тензор
+            Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
+                    bitmap,
+                    TensorImageUtils.TORCHVISION_NORM_MEAN_RGB,
+                    TensorImageUtils.TORCHVISION_NORM_STD_RGB
+            );
 
-        // Выполняем инференс
-        Tensor outputTensor = model.forward(IValue.from(inputTensor)).toTensor();
+            // Выполняем инференс
+            Tensor outputTensor = model.forward(IValue.from(inputTensor)).toTensor();
 
-        // Пример обработки результатов (зависит от вашей модели)
-        float[] outputs = outputTensor.getDataAsFloatArray();
-        for (int i = 0; i < outputs.length; i++) {
-            // Простая проверка, чтобы выбрать только значимые результаты
-            if (outputs[i] > 0.5) {
-                detectedProducts.add("Продукт #" + i); // Здесь замените на свои метки
+            // Обработка выходного тензора
+            float[] outputs = outputTensor.getDataAsFloatArray();
+            Log.i("NeuralNetworkHelper", "Размер выходного тензора: " + outputs.length);
+
+            for (int i = 0; i < outputs.length; i++) {
+                // Пример: если значение больше 0.5, считаем это детекцией
+                if (outputs[i] > 0.5) {
+                    detectedProducts.add("Продукт #" + i);
+                    Log.i("NeuralNetworkHelper", "Обнаружен продукт #" + i + " с вероятностью " + outputs[i]);
+                }
             }
+
+        } catch (Exception e) {
+            Log.e("NeuralNetworkHelper", "Ошибка обработки изображения", e);
+        }
+
+        if (detectedProducts.isEmpty()) {
+            Log.w("NeuralNetworkHelper", "Продукты не обнаружены. Возможно, проблема с моделью.");
         }
 
         return detectedProducts;
     }
 
-    // Утилита для копирования файла из assets
+    // Копирование файла из assets
     private static String assetFilePath(Context context, String assetName) throws Exception {
         File file = new File(context.getFilesDir(), assetName);
         if (!file.exists()) {
+            Log.i("NeuralNetworkHelper", "Копирование модели из assets...");
             try (InputStream is = context.getAssets().open(assetName);
                  FileOutputStream os = new FileOutputStream(file)) {
                 byte[] buffer = new byte[4 * 1024];
@@ -90,8 +86,9 @@ public class NeuralNetworkHelper {
                 }
                 os.flush();
             }
+        } else {
+            Log.i("NeuralNetworkHelper", "Файл модели уже существует: " + file.getAbsolutePath());
         }
         return file.getAbsolutePath();
     }
 }
-

@@ -20,6 +20,7 @@ import java.util.List;
 public class SearchRecipesActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_PICK = 2;
+
     private ImageView capturedImageView;
     private ListView recognizedItemsListView;
     private List<String> recognizedItems;
@@ -30,7 +31,7 @@ public class SearchRecipesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_recipes);
 
-        // Инициализируем модель
+        // Initialize neural network
         NeuralNetworkHelper.loadModel(this);
 
         Button openCameraButton = findViewById(R.id.openCameraButton);
@@ -85,12 +86,19 @@ public class SearchRecipesActivity extends AppCompatActivity {
     }
 
     private void recognizeProducts(Bitmap image) {
-        // Передаем изображение в нейросеть
+        // Recognize products with the neural network
         List<String> detectedProducts = NeuralNetworkHelper.recognize(image);
-        recognizedItems.clear();
-        recognizedItems.addAll(detectedProducts);
-        adapter.notifyDataSetChanged();
+        if (detectedProducts.isEmpty()) {
+            Toast.makeText(this, "Не удалось распознать продукты", Toast.LENGTH_SHORT).show();
+        } else {
+            recognizedItems.clear();
+            recognizedItems.addAll(detectedProducts);
+            adapter.notifyDataSetChanged(); // Update UI
+        }
     }
 }
+
+
+
 
 

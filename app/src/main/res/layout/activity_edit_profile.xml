@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <!-- Поле для изменения имени пользователя -->
+    <EditText
+        android:id="@+id/usernameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Новое имя пользователя"
+        android:padding="12dp"
+        android:textSize="18sp" />
+
+    <!-- Поле для ввода текущего пароля -->
+    <EditText
+        android:id="@+id/currentPasswordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Текущий пароль"
+        android:padding="12dp"
+        android:inputType="textPassword"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp" />
+
+    <!-- Поле для изменения пароля -->
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Новый пароль (опционально)"
+        android:padding="12dp"
+        android:inputType="textPassword"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp" />
+
+    <!-- Кнопка для сохранения -->
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сохранить изменения"
+        android:layout_marginTop="16dp" />
+
+    <!-- Кнопка возврата -->
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Вернуться в профиль"
+        android:layout_marginTop="12dp" />
+</LinearLayout>
