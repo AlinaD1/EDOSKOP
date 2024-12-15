@@ -1,52 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/backgroundColor"
+    tools:context=".EditRecipeActivity">
 
-    <LinearLayout
+    <!-- Левые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="-50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="-50dp"
+        android:translationY="50dp" />
+
+    <!-- Правые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="50dp"
+        android:translationY="50dp" />
+
+    <!-- Основное содержимое -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-        <!-- Поле для редактирования названия рецепта -->
-        <EditText
-            android:id="@+id/editRecipeName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Название рецепта"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Поле для редактирования описания рецепта -->
-        <EditText
-            android:id="@+id/editDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Описание рецепта"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Контейнер для списка ингредиентов -->
         <LinearLayout
-            android:id="@+id/ingredientsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="16dp" />
+            android:orientation="vertical">
 
-        <!-- Кнопка для добавления ингредиента -->
-        <Button
-            android:id="@+id/addIngredientButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Добавить ингредиент"
-            android:layout_marginBottom="16dp" />
+            <!-- Верхняя панель с заголовком -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="148dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-        <!-- Кнопка для сохранения изменений -->
-        <Button
-            android:id="@+id/saveChangesButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Сохранить изменения" />
-    </LinearLayout>
-</ScrollView>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/backgroundColor"
+                    android:padding="16dp"
+                    app:cardCornerRadius="50dp"
+                    app:cardElevation="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="   Редактировать "
+                        android:textColor="@color/primaryTextColor"
+                        android:textSize="40sp"
+                        android:textStyle="bold" />
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Поля для редактирования -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Название рецепта"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editRecipeName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Описание рецепта"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:textSize="18sp"
+                    android:minLines="3" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Контейнер для списка ингредиентов -->
+            <LinearLayout
+                android:id="@+id/ingredientsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp" />
+
+            <!-- Кнопка для добавления ингредиента -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addIngredientButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/buttonColor"
+                android:padding="12dp"
+                android:text="Добавить ингредиент"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp" />
+
+            <!-- Кнопка для сохранения изменений -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveChangesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/buttonColor"
+                android:padding="16dp"
+                android:text="Сохранить изменения"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
