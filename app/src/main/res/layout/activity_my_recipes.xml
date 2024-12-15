@@ -1,36 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/backgroundColor"
+    tools:context=".MyRecipesActivity">
 
-    <!-- Заголовок -->
-    <TextView
+    <!-- Левые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="-50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="-50dp"
+        android:translationY="50dp" />
+
+    <!-- Правые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="50dp"
+        android:translationY="50dp" />
+
+    <!-- Основное содержимое -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ваши рецепты"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- RecyclerView для отображения рецептов -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recipesRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical" />
+        <!-- Верхняя панель с заголовком -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-    <!-- Кнопка добавления рецепта -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/addRecipeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Добавить рецепт"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white" />
-</LinearLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/backgroundColor"
+                android:padding="16dp"
+                app:cardCornerRadius="50dp"
+                app:cardElevation="4dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ваши рецепты"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="40sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- RecyclerView для отображения рецептов -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recipesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:background="@color/backgroundColor"
+            android:padding="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+             />
+
+        <!-- Кнопка добавления рецепта -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addRecipeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/buttonColor"
+            android:padding="16dp"
+            android:text="Добавить рецепт"
+            android:textColor="@android:color/white"
+            app:cornerRadius="12dp" />
+    </LinearLayout>
+</FrameLayout>

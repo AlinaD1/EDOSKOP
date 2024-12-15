@@ -1,84 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/backgroundColor"
+    tools:context=".RecipeDetailActivity">
 
-    <LinearLayout
+    <!-- Левые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="-50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="-50dp"
+        android:translationY="50dp" />
+
+    <!-- Правые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="50dp"
+        android:translationY="50dp" />
+
+    <!-- Основное содержимое -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-        <!-- Название рецепта -->
-        <TextView
-            android:id="@+id/recipeNameDetail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Название рецепта"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Список ингредиентов -->
-        <TextView
-            android:id="@+id/ingredientsDetail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ингредиенты"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/ingredientsTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Список ингредиентов будет здесь"
-            android:textSize="16sp"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Описание рецепта -->
-        <TextView
-            android:id="@+id/descriptionDetail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Описание"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/descriptionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Описание рецепта будет здесь"
-            android:textSize="16sp"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Кнопки -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end">
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/editRecipeButton"
-                android:layout_width="wrap_content"
+            <!-- Название рецепта -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Редактировать"
-                android:layout_marginEnd="8dp"
-                android:backgroundTint="@android:color/holo_blue_dark"
-                android:textColor="@android:color/white" />
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/backgroundColor"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
 
-            <Button
-                android:id="@+id/deleteRecipeButton"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/recipeNameDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Название рецепта"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Список ингредиентов -->
+            <TextView
+                android:id="@+id/ingredientsDetail"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Удалить"
-                android:backgroundTint="@android:color/holo_red_dark"
-                android:textColor="@android:color/white" />
+                android:text="Ингредиенты"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/ingredientsTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Список ингредиентов будет здесь"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:textColor="@color/primaryTextColor" />
+
+            <!-- Описание рецепта -->
+            <TextView
+                android:id="@+id/descriptionDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Описание"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Описание рецепта будет здесь"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:textColor="@color/primaryTextColor" />
+
+            <!-- Кнопки -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/editRecipeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="@color/buttonColor"
+                    android:text="Редактировать"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deleteRecipeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/buttonColor"
+                    android:text="Удалить"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="8dp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</FrameLayout>
