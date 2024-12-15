@@ -10,15 +10,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Поле для названия рецепта -->
+        <!-- Поле для редактирования названия рецепта -->
         <EditText
-            android:id="@+id/recipeNameInput"
+            android:id="@+id/editRecipeName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Название рецепта"
             android:layout_marginBottom="16dp" />
 
-        <!-- Контейнер для ингредиентов -->
+        <!-- Поле для редактирования описания рецепта -->
+        <EditText
+            android:id="@+id/editDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Описание рецепта"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Контейнер для списка ингредиентов -->
         <LinearLayout
             android:id="@+id/ingredientsContainer"
             android:layout_width="match_parent"
@@ -26,7 +34,7 @@
             android:orientation="vertical"
             android:layout_marginBottom="16dp" />
 
-        <!-- Кнопка для добавления нового ингредиента -->
+        <!-- Кнопка для добавления ингредиента -->
         <Button
             android:id="@+id/addIngredientButton"
             android:layout_width="wrap_content"
@@ -34,20 +42,11 @@
             android:text="Добавить ингредиент"
             android:layout_marginBottom="16dp" />
 
-        <!-- Поле для описания рецепта -->
-        <EditText
-            android:id="@+id/descriptionInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Описание рецепта"
-            android:minLines="3"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Кнопка сохранить -->
+        <!-- Кнопка для сохранения изменений -->
         <Button
-            android:id="@+id/saveButton"
+            android:id="@+id/saveChangesButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Сохранить рецепт" />
+            android:text="Сохранить изменения" />
     </LinearLayout>
 </ScrollView>

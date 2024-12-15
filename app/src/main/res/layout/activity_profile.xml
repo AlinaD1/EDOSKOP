@@ -8,7 +8,6 @@
     tools:context=".ProfileActivity">
 
     <!-- Верхний левый угол -->
-    <!-- Верхний левый угол -->
     <View
         android:layout_width="120dp"
         android:layout_height="120dp"
@@ -47,6 +46,7 @@
         android:rotation="90"
         android:translationX="60dp"
         android:translationY="60dp" />
+
     <!-- Основное содержимое -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,6 +115,19 @@
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
+        <!-- Новая кнопка "Редактировать профиль" -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editProfileButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/buttonColor"
+            app:cornerRadius="16dp"
+            android:padding="16dp"
+            android:text="Редактировать профиль"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
         <!-- Разделитель -->
         <View
             android:layout_width="match_parent"
@@ -149,3 +162,4 @@
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
+

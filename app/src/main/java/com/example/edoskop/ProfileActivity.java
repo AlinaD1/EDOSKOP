@@ -50,6 +50,10 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.searchRecipesButton).setOnClickListener(view ->
                 startActivity(new Intent(ProfileActivity.this, SearchRecipesActivity.class))
         );
+
+        findViewById(R.id.editProfileButton).setOnClickListener(view ->
+                startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class))
+        );
     }
 
     private void redirectToLogin() {
