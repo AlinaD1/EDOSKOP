@@ -4,26 +4,42 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-public class RecognizedItemsAdapter extends ArrayAdapter<String> {
+public class RecognizedItemsAdapter extends RecyclerView.Adapter<RecognizedItemsAdapter.ViewHolder> {
 
-    public RecognizedItemsAdapter(Context context, List<String> items) {
-        super(context, R.layout.item_recognized, items); // Здесь ссылка на item_recognized
+    private Context context;
+    private List<String> recognizedItems;
+
+    public RecognizedItemsAdapter(Context context, List<String> recognizedItems) {
+        this.context = context;
+        this.recognizedItems = recognizedItems;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_recognized, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.textView.setText(recognizedItems.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        return recognizedItems.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView textView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(android.R.id.text1);
         }
-
-        TextView itemNameTextView = convertView.findViewById(R.id.itemNameTextView);
-        itemNameTextView.setText(getItem(position));
-
-        return convertView;
     }
 }
