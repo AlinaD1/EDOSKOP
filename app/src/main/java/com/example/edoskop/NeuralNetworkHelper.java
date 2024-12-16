@@ -3,6 +3,7 @@ package com.example.edoskop;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.graphics.Canvas;
 
 import org.pytorch.IValue;
 import org.pytorch.Module;
@@ -14,8 +15,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
 
 public class NeuralNetworkHelper {
 
@@ -35,68 +38,116 @@ public class NeuralNetworkHelper {
         }
     }
 
-    // Распознавание объектов
-    public static List<String> recognize(Bitmap bitmap) {
-        List<String> detectedProducts = new ArrayList<>();
-        if (model == null) {
-            Log.e("NeuralNetworkHelper", "Модель не загружена. Проверьте вызов loadModel.");
-            return detectedProducts;
-        }
+    private static List<float[]> decodePredictions(float[] outputs, float confidenceThreshold) {
+        List<float[]> predictions = new ArrayList<>();
+        int predictionLength = 6; // x_center, y_center, width, height, confidence, class_index
 
-        try {
-            // 1. Изменение размера изображения до 640x640
-            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 640, 640, true);
-
-            // 2. Преобразование изображения в тензор
-            Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
-                    resizedBitmap,
-                    TensorImageUtils.TORCHVISION_NORM_MEAN_RGB,
-                    TensorImageUtils.TORCHVISION_NORM_STD_RGB
-            );
-
-            // 3. Инференс модели YOLO
-            Tensor outputTensor = model.forward(IValue.from(inputTensor)).toTensor();
-
-            // 4. Обработка выходных данных YOLO
-            float[] outputs = outputTensor.getDataAsFloatArray();
-            Log.i("NeuralNetworkHelper", "Размер выходного тензора: " + outputs.length);
-
-            // YOLO возвращает формат (x_center, y_center, width, height, confidence, class_id)
-            int predictionLength = 6; // Каждый объект в тензоре YOLO состоит из 6 значений
-            for (int i = 0; i < outputs.length; i += predictionLength) {
+        for (int i = 0; i < outputs.length; i += predictionLength) {
+            float confidence = outputs[i + 4];
+            if (confidence > confidenceThreshold) {
                 float x_center = outputs[i];
                 float y_center = outputs[i + 1];
                 float width = outputs[i + 2];
                 float height = outputs[i + 3];
-                float confidence = outputs[i + 4];
-                int classIndex = (int) outputs[i + 5]; // Индекс класса
+                int classIndex = Math.round(outputs[i + 5]); // Округляем класс до целого
 
-                // Убедимся, что объект соответствует критериям
-                if (confidence > 0.8) { // Фильтруем по уверенности
-                    if (classIndex >= 0 && classIndex < classNames.size()) {
-                        String className = classNames.get(classIndex);
-                        Log.i("NeuralNetworkHelper", String.format(
-                                "Обнаружен объект: %s (уверенность: %.2f)", className, confidence
-                        ));
-                        detectedProducts.add(className);
-                    } else {
-                        Log.w("NeuralNetworkHelper", "Неизвестный класс (индекс класса: " + classIndex + ")");
-                    }
+                float x1 = x_center - width / 2;
+                float y1 = y_center - height / 2;
+                float x2 = x_center + width / 2;
+                float y2 = y_center + height / 2;
+
+                predictions.add(new float[]{x1, y1, x2, y2, confidence, classIndex});
+            }
+        }
+
+        return predictions;
+    }
+
+    public static List<float[]> nonMaximumSuppression(List<float[]> predictions, float iouThreshold) {
+        List<float[]> filteredPredictions = new ArrayList<>();
+        predictions.sort((o1, o2) -> Float.compare(o2[4], o1[4])); // Сортировка по confidence
+
+        while (!predictions.isEmpty()) {
+            float[] bestPrediction = predictions.remove(0);
+            filteredPredictions.add(bestPrediction);
+
+            predictions.removeIf(prediction -> calculateIoU(bestPrediction, prediction) > iouThreshold);
+        }
+
+        return filteredPredictions;
+    }
+
+    private static float calculateIoU(float[] boxA, float[] boxB) {
+        float x1 = Math.max(boxA[0], boxB[0]);
+        float y1 = Math.max(boxA[1], boxB[1]);
+        float x2 = Math.min(boxA[2], boxB[2]);
+        float y2 = Math.min(boxA[3], boxB[3]);
+
+        float intersection = Math.max(0, x2 - x1) * Math.max(0, y2 - y1);
+        float areaA = (boxA[2] - boxA[0]) * (boxA[3] - boxA[1]);
+        float areaB = (boxB[2] - boxB[0]) * (boxB[3] - boxB[1]);
+
+        float union = areaA + areaB - intersection;
+        return intersection / union;
+    }
+
+    private static Bitmap addPadding(Bitmap bitmap, int targetSize) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float scale = Math.min((float) targetSize / width, (float) targetSize / height);
+        int newWidth = Math.round(width * scale);
+        int newHeight = Math.round(height * scale);
+
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+        Bitmap paddedBitmap = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(paddedBitmap);
+        int xOffset = (targetSize - newWidth) / 2;
+        int yOffset = (targetSize - newHeight) / 2;
+        canvas.drawBitmap(resizedBitmap, xOffset, yOffset, null);
+
+        return paddedBitmap;
+    }
+
+
+    // Распознавание объектов
+    public static List<String> recognize(Bitmap bitmap) {
+        Set<String> detectedProducts = new HashSet<>();
+        if (model == null) {
+            Log.e("NeuralNetworkHelper", "Модель не загружена.");
+            return new ArrayList<>(detectedProducts);
+        }
+
+        try {
+            Bitmap paddedBitmap = addPadding(bitmap, 640);
+            Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
+                    paddedBitmap,
+                    TensorImageUtils.TORCHVISION_NORM_MEAN_RGB,
+                    TensorImageUtils.TORCHVISION_NORM_STD_RGB
+            );
+
+            Tensor outputTensor = model.forward(IValue.from(inputTensor)).toTensor();
+            float[] outputs = outputTensor.getDataAsFloatArray();
+
+            List<float[]> decodedPredictions = decodePredictions(outputs, 0.5f);
+            List<float[]> finalPredictions = nonMaximumSuppression(decodedPredictions, 0.4f);
+
+            for (float[] prediction : finalPredictions) {
+                int classIndex = (int) prediction[5];
+                if (classIndex >= 0 && classIndex < classNames.size()) {
+                    String className = classNames.get(classIndex);
+                    detectedProducts.add(className);
                 }
             }
-
         } catch (Exception e) {
             Log.e("NeuralNetworkHelper", "Ошибка обработки изображения", e);
         }
 
-        if (detectedProducts.isEmpty()) {
-            Log.w("NeuralNetworkHelper", "Объекты не обнаружены. Возможно, проблема с моделью.");
-        }
-
-        return detectedProducts;
+        return new ArrayList<>(detectedProducts);
     }
 
-        // Загрузка имен классов из файла coco.names
+
+
+    // Загрузка имен классов из файла coco.names
     private static void loadClassNames(Context context, String fileName) {
         try {
             InputStream inputStream = context.getAssets().open(fileName);
