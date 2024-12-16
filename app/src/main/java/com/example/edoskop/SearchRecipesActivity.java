@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ public class SearchRecipesActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_PICK = 2;
 
     private ImageView capturedImageView;
-    private ListView recognizedItemsListView;
+    private RecyclerView recognizedItemsListView;
     private List<String> recognizedItems;
-    private RecognizedItemsAdapter adapter;
+    public RecognizedItemsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,20 +9,25 @@ import org.pytorch.Module;
 import org.pytorch.Tensor;
 import org.pytorch.torchvision.TensorImageUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NeuralNetworkHelper {
 
     private static Module model;
+    private static List<String> classNames = new ArrayList<>();
 
-    // Загрузка модели из папки assets
+    // Загрузка модели и имен классов
     public static void loadModel(Context context) {
         try {
-            String modelPath = assetFilePath(context, "yolov8x.pt");
+            // Загрузка файла имен классов
+            loadClassNames(context, "coco.names"); // Имя файла, где хранятся классы
+            String modelPath = assetFilePath(context, "yolov8x_scripted.pt"); // Убедитесь, что это TorchScript
             model = Module.load(modelPath);
             Log.i("NeuralNetworkHelper", "Модель успешно загружена: " + modelPath);
         } catch (Exception e) {
@@ -30,7 +35,7 @@ public class NeuralNetworkHelper {
         }
     }
 
-    // Распознавание продуктов
+    // Распознавание объектов
     public static List<String> recognize(Bitmap bitmap) {
         List<String> detectedProducts = new ArrayList<>();
         if (model == null) {
@@ -39,25 +44,44 @@ public class NeuralNetworkHelper {
         }
 
         try {
-            // Преобразуем изображение в тензор
+            // 1. Изменение размера изображения до 640x640
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 640, 640, true);
+
+            // 2. Преобразование изображения в тензор
             Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
-                    bitmap,
+                    resizedBitmap,
                     TensorImageUtils.TORCHVISION_NORM_MEAN_RGB,
                     TensorImageUtils.TORCHVISION_NORM_STD_RGB
             );
 
-            // Выполняем инференс
+            // 3. Инференс модели YOLO
             Tensor outputTensor = model.forward(IValue.from(inputTensor)).toTensor();
 
-            // Обработка выходного тензора
+            // 4. Обработка выходных данных YOLO
             float[] outputs = outputTensor.getDataAsFloatArray();
             Log.i("NeuralNetworkHelper", "Размер выходного тензора: " + outputs.length);
 
-            for (int i = 0; i < outputs.length; i++) {
-                // Пример: если значение больше 0.5, считаем это детекцией
-                if (outputs[i] > 0.5) {
-                    detectedProducts.add("Продукт #" + i);
-                    Log.i("NeuralNetworkHelper", "Обнаружен продукт #" + i + " с вероятностью " + outputs[i]);
+            // YOLO возвращает формат (x_center, y_center, width, height, confidence, class_id)
+            int predictionLength = 6; // Каждый объект в тензоре YOLO состоит из 6 значений
+            for (int i = 0; i < outputs.length; i += predictionLength) {
+                float x_center = outputs[i];
+                float y_center = outputs[i + 1];
+                float width = outputs[i + 2];
+                float height = outputs[i + 3];
+                float confidence = outputs[i + 4];
+                int classIndex = (int) outputs[i + 5]; // Индекс класса
+
+                // Убедимся, что объект соответствует критериям
+                if (confidence > 0.8) { // Фильтруем по уверенности
+                    if (classIndex >= 0 && classIndex < classNames.size()) {
+                        String className = classNames.get(classIndex);
+                        Log.i("NeuralNetworkHelper", String.format(
+                                "Обнаружен объект: %s (уверенность: %.2f)", className, confidence
+                        ));
+                        detectedProducts.add(className);
+                    } else {
+                        Log.w("NeuralNetworkHelper", "Неизвестный класс (индекс класса: " + classIndex + ")");
+                    }
                 }
             }
 
@@ -66,10 +90,26 @@ public class NeuralNetworkHelper {
         }
 
         if (detectedProducts.isEmpty()) {
-            Log.w("NeuralNetworkHelper", "Продукты не обнаружены. Возможно, проблема с моделью.");
+            Log.w("NeuralNetworkHelper", "Объекты не обнаружены. Возможно, проблема с моделью.");
         }
 
         return detectedProducts;
+    }
+
+        // Загрузка имен классов из файла coco.names
+    private static void loadClassNames(Context context, String fileName) {
+        try {
+            InputStream inputStream = context.getAssets().open(fileName);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                classNames.add(line.trim());
+            }
+            reader.close();
+            Log.i("NeuralNetworkHelper", "Загружено " + classNames.size() + " классов");
+        } catch (Exception e) {
+            Log.e("NeuralNetworkHelper", "Ошибка при загрузке имен классов", e);
+        }
     }
 
     // Копирование файла из assets
