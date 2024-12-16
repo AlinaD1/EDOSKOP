@@ -27,7 +27,7 @@ public class NeuralNetworkHelper {
         try {
             // Загрузка файла имен классов
             loadClassNames(context, "coco.names"); // Имя файла, где хранятся классы
-            String modelPath = assetFilePath(context, "yolov8x_scripted.pt"); // Убедитесь, что это TorchScript
+            String modelPath = assetFilePath(context, "yolov8x.torchscript.pt"); // Убедитесь, что это TorchScript
             model = Module.load(modelPath);
             Log.i("NeuralNetworkHelper", "Модель успешно загружена: " + modelPath);
         } catch (Exception e) {
