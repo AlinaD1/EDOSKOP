@@ -51,6 +51,7 @@ dependencies {
 
     // Firebase UI для работы с RecyclerView
     implementation("com.firebaseui:firebase-ui-database:8.0.1")
+    implementation(libs.ui.graphics.android)
 
     // Тестовые зависимости
     testImplementation(libs.junit)
