@@ -1,185 +1,122 @@
 package com.example.edoskop;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.graphics.Canvas;
 
-import org.pytorch.IValue;
-import org.pytorch.Module;
-import org.pytorch.Tensor;
-import org.pytorch.torchvision.TensorImageUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import okhttp3.*;
 
 public class NeuralNetworkHelper {
 
-    private static Module model;
-    private static List<String> classNames = new ArrayList<>();
+    private static final String API_URL = "https://predict.ultralytics.com";
+    private static final String API_KEY = "01b7273e903917a0fdb3a3b6bed1c68f1eae8a703e";
+    private static final String MODEL_URL = "https://hub.ultralytics.com/models/oEGPQzz54rE6XMaBcy4K";
+    private static final String TAG = "NeuralNetworkHelper";
 
-    // Загрузка модели и имен классов
-    public static void loadModel(Context context) {
-        try {
-            // Загрузка файла имен классов
-            loadClassNames(context, "coco.names"); // Имя файла, где хранятся классы
-            String modelPath = assetFilePath(context, "yolov8x.torchscript.pt"); // Убедитесь, что это TorchScript
-            model = Module.load(modelPath);
-            Log.i("NeuralNetworkHelper", "Модель успешно загружена: " + modelPath);
-        } catch (Exception e) {
-            Log.e("NeuralNetworkHelper", "Ошибка загрузки модели", e);
-        }
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    // Создание карты для перевода английских слов в русский
+    private static final Map<String, String> translations = new HashMap<>();
+    static {
+        translations.put("banana", "банан");
+        translations.put("Apple", "яблоко");
+        translations.put("egg", "яйцо");
+        translations.put("flour", "мука");
+        translations.put("cheese", "сыр");
     }
 
-    private static List<float[]> decodePredictions(float[] outputs, float confidenceThreshold) {
-        List<float[]> predictions = new ArrayList<>();
-        int predictionLength = 6; // x_center, y_center, width, height, confidence, class_index
+    // Преобразование изображения в байтовый массив для отправки на сервер
+    private static byte[] bitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        return outputStream.toByteArray();
+    }
 
-        for (int i = 0; i < outputs.length; i += predictionLength) {
-            float confidence = outputs[i + 4];
-            if (confidence > confidenceThreshold) {
-                float x_center = outputs[i];
-                float y_center = outputs[i + 1];
-                float width = outputs[i + 2];
-                float height = outputs[i + 3];
-                int classIndex = Math.round(outputs[i + 5]); // Округляем класс до целого
+    // Распознавание объектов с использованием удаленного API (асинхронно)
+    public static Future<List<String>> recognize(Bitmap bitmap) {
+        return executorService.submit(new Callable<List<String>>() {
+            @Override
+            public List<String> call() {
+                Set<String> detectedProducts = new HashSet<>();
 
-                float x1 = x_center - width / 2;
-                float y1 = y_center - height / 2;
-                float x2 = x_center + width / 2;
-                float y2 = y_center + height / 2;
+                try {
+                    byte[] imageBytes = bitmapToByteArray(bitmap);
 
-                predictions.add(new float[]{x1, y1, x2, y2, confidence, classIndex});
+                    OkHttpClient client = new OkHttpClient();
+
+                    // Создаем тело запроса с изображением и параметрами
+                    RequestBody fileBody = RequestBody.create(imageBytes, MediaType.parse("image/jpeg"));
+
+                    RequestBody requestBody = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("file", "image.jpg", fileBody)
+                            .addFormDataPart("model", MODEL_URL)
+                            .addFormDataPart("imgsz", "640")
+                            .addFormDataPart("conf", "0.25")
+                            .addFormDataPart("iou", "0.45")
+                            .build();
+
+                    // Создаем запрос
+                    Request request = new Request.Builder()
+                            .url(API_URL)
+                            .addHeader("x-api-key", API_KEY)
+                            .post(requestBody)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        String responseBody = response.body().string();
+                        Log.d(TAG, "Ответ от сервера: " + responseBody);
+                        parseResponse(responseBody, detectedProducts);
+                    } else {
+                        Log.e(TAG, "Ошибка соединения: " + response.code());
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Ошибка при обработке изображения", e);
+                }
+
+                return new ArrayList<>(detectedProducts);
             }
-        }
-
-        return predictions;
+        });
     }
 
-    public static List<float[]> nonMaximumSuppression(List<float[]> predictions, float iouThreshold) {
-        List<float[]> filteredPredictions = new ArrayList<>();
-        predictions.sort((o1, o2) -> Float.compare(o2[4], o1[4])); // Сортировка по confidence
-
-        while (!predictions.isEmpty()) {
-            float[] bestPrediction = predictions.remove(0);
-            filteredPredictions.add(bestPrediction);
-
-            predictions.removeIf(prediction -> calculateIoU(bestPrediction, prediction) > iouThreshold);
-        }
-
-        return filteredPredictions;
-    }
-
-    private static float calculateIoU(float[] boxA, float[] boxB) {
-        float x1 = Math.max(boxA[0], boxB[0]);
-        float y1 = Math.max(boxA[1], boxB[1]);
-        float x2 = Math.min(boxA[2], boxB[2]);
-        float y2 = Math.min(boxA[3], boxB[3]);
-
-        float intersection = Math.max(0, x2 - x1) * Math.max(0, y2 - y1);
-        float areaA = (boxA[2] - boxA[0]) * (boxA[3] - boxA[1]);
-        float areaB = (boxB[2] - boxB[0]) * (boxB[3] - boxB[1]);
-
-        float union = areaA + areaB - intersection;
-        return intersection / union;
-    }
-
-    private static Bitmap addPadding(Bitmap bitmap, int targetSize) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        float scale = Math.min((float) targetSize / width, (float) targetSize / height);
-        int newWidth = Math.round(width * scale);
-        int newHeight = Math.round(height * scale);
-
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-        Bitmap paddedBitmap = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(paddedBitmap);
-        int xOffset = (targetSize - newWidth) / 2;
-        int yOffset = (targetSize - newHeight) / 2;
-        canvas.drawBitmap(resizedBitmap, xOffset, yOffset, null);
-
-        return paddedBitmap;
-    }
-
-
-    // Распознавание объектов
-    public static List<String> recognize(Bitmap bitmap) {
-        Set<String> detectedProducts = new HashSet<>();
-        if (model == null) {
-            Log.e("NeuralNetworkHelper", "Модель не загружена.");
-            return new ArrayList<>(detectedProducts);
-        }
-
+    // Разбор JSON-ответа от сервера с переводом
+    private static void parseResponse(String response, Set<String> detectedProducts) {
         try {
-            Bitmap paddedBitmap = addPadding(bitmap, 640);
-            Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
-                    paddedBitmap,
-                    TensorImageUtils.TORCHVISION_NORM_MEAN_RGB,
-                    TensorImageUtils.TORCHVISION_NORM_STD_RGB
-            );
+            JSONObject jsonResponse = new JSONObject(response);
+            JSONArray images = jsonResponse.getJSONArray("images");
 
-            Tensor outputTensor = model.forward(IValue.from(inputTensor)).toTensor();
-            float[] outputs = outputTensor.getDataAsFloatArray();
+            for (int i = 0; i < images.length(); i++) {
+                JSONObject image = images.getJSONObject(i);
+                JSONArray results = image.getJSONArray("results");
 
-            List<float[]> decodedPredictions = decodePredictions(outputs, 0.5f);
-            List<float[]> finalPredictions = nonMaximumSuppression(decodedPredictions, 0.4f);
+                for (int j = 0; j < results.length(); j++) {
+                    JSONObject result = results.getJSONObject(j);
+                    String className = result.getString("name");
 
-            for (float[] prediction : finalPredictions) {
-                int classIndex = (int) prediction[5];
-                if (classIndex >= 0 && classIndex < classNames.size()) {
-                    String className = classNames.get(classIndex);
-                    detectedProducts.add(className);
+                    // Переводим слово, если оно есть в карте
+                    String translatedName = translations.getOrDefault(className, className);
+
+                    detectedProducts.add(translatedName);
                 }
             }
         } catch (Exception e) {
-            Log.e("NeuralNetworkHelper", "Ошибка обработки изображения", e);
+            Log.e(TAG, "Ошибка при разборе JSON-ответа", e);
         }
-
-        return new ArrayList<>(detectedProducts);
-    }
-
-
-
-    // Загрузка имен классов из файла coco.names
-    private static void loadClassNames(Context context, String fileName) {
-        try {
-            InputStream inputStream = context.getAssets().open(fileName);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                classNames.add(line.trim());
-            }
-            reader.close();
-            Log.i("NeuralNetworkHelper", "Загружено " + classNames.size() + " классов");
-        } catch (Exception e) {
-            Log.e("NeuralNetworkHelper", "Ошибка при загрузке имен классов", e);
-        }
-    }
-
-    // Копирование файла из assets
-    private static String assetFilePath(Context context, String assetName) throws Exception {
-        File file = new File(context.getFilesDir(), assetName);
-        if (!file.exists()) {
-            Log.i("NeuralNetworkHelper", "Копирование модели из assets...");
-            try (InputStream is = context.getAssets().open(assetName);
-                 FileOutputStream os = new FileOutputStream(file)) {
-                byte[] buffer = new byte[4 * 1024];
-                int read;
-                while ((read = is.read(buffer)) != -1) {
-                    os.write(buffer, 0, read);
-                }
-                os.flush();
-            }
-        } else {
-            Log.i("NeuralNetworkHelper", "Файл модели уже существует: " + file.getAbsolutePath());
-        }
-        return file.getAbsolutePath();
     }
 }
