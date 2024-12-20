@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import android.widget.EditText;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,29 +25,50 @@ public class SearchRecipesActivity extends AppCompatActivity {
     private ImageView capturedImageView;
     private RecyclerView recognizedItemsListView;
     private List<String> recognizedItems;
-    public RecognizedItemsAdapter adapter;
+    private RecognizedItemsAdapter adapter;
+    private EditText newIngredientInput;  // Поле для ввода нового ингредиента
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_recipes);
 
-        // Initialize neural network
+        // Инициализация нейронной сети
         NeuralNetworkHelper.loadModel(this);
 
+        // Получение ссылок на элементы UI
         Button openCameraButton = findViewById(R.id.openCameraButton);
         Button uploadFromGalleryButton = findViewById(R.id.uploadFromGalleryButton);
+        Button addIngredientButton = findViewById(R.id.addIngredientButton); // Кнопка для добавления ингредиента
         capturedImageView = findViewById(R.id.capturedImageView);
         recognizedItemsListView = findViewById(R.id.recognizedItemsListView);
+        newIngredientInput = findViewById(R.id.newIngredientInput); // Поле ввода нового ингредиента
 
+        // Инициализация списка распознанных продуктов и адаптера
         recognizedItems = new ArrayList<>();
         adapter = new RecognizedItemsAdapter(this, recognizedItems);
         recognizedItemsListView.setAdapter(adapter);
 
+        // Обработчики кнопок
         openCameraButton.setOnClickListener(v -> openCamera());
         uploadFromGalleryButton.setOnClickListener(v -> pickImageFromGallery());
+        addIngredientButton.setOnClickListener(v -> addNewIngredient()); // Добавление нового ингредиента
     }
 
+    // Добавление нового ингредиента в список распознанных продуктов
+    private void addNewIngredient() {
+        String newIngredient = newIngredientInput.getText().toString().trim();
+        if (!newIngredient.isEmpty()) {
+            // Добавляем новый ингредиент в список
+            recognizedItems.add(newIngredient);
+            adapter.notifyDataSetChanged(); // Обновляем адаптер, чтобы отобразить изменения
+            newIngredientInput.setText(""); // Очищаем поле ввода
+        } else {
+            Toast.makeText(this, "Введите ингредиент", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Открытие камеры
     private void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -56,6 +78,7 @@ public class SearchRecipesActivity extends AppCompatActivity {
         }
     }
 
+    // Выбор изображения из галереи
     private void pickImageFromGallery() {
         Intent pickPhotoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_PICK);
@@ -86,19 +109,14 @@ public class SearchRecipesActivity extends AppCompatActivity {
     }
 
     private void recognizeProducts(Bitmap image) {
-        // Recognize products with the neural network
+        // Распознаем продукты с помощью нейросети
         List<String> detectedProducts = NeuralNetworkHelper.recognize(image);
         if (detectedProducts.isEmpty()) {
             Toast.makeText(this, "Не удалось распознать продукты", Toast.LENGTH_SHORT).show();
         } else {
             recognizedItems.clear();
             recognizedItems.addAll(detectedProducts);
-            adapter.notifyDataSetChanged(); // Update UI
+            adapter.notifyDataSetChanged(); // Обновляем UI
         }
     }
 }
-
-
-
-
-

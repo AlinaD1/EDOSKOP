@@ -57,6 +57,7 @@
         android:padding="16dp"
         android:gravity="center">
 
+        <!-- Кнопки наверху -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/openCameraButton"
             android:layout_width="match_parent"
@@ -65,8 +66,19 @@
             android:backgroundTint="@color/buttonColor"
             android:textColor="@android:color/white"
             app:cornerRadius="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/uploadFromGalleryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Загрузить из галереи"
+            android:backgroundTint="@color/buttonColor"
+            android:textColor="@android:color/white"
+            app:cornerRadius="8dp"
             android:layout_marginBottom="16dp" />
 
+        <!-- Карточка для отображения изображения -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -83,6 +95,7 @@
                 android:scaleType="centerCrop" />
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Текст и список распознанных продуктов -->
         <TextView
             android:id="@+id/recognizedItemsLabel"
             android:layout_width="wrap_content"
@@ -101,13 +114,41 @@
             app:layoutManager="LinearLayoutManager"
             android:layout_marginBottom="16dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/uploadFromGalleryButton"
+
+        <!-- Поле ввода нового ингредиента -->
+        <EditText
+            android:id="@+id/newIngredientInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Загрузить из галереи"
+            android:hint="Введите новый ингредиент"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/buttonColor"
+            android:padding="16dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:minHeight="48dp"
+            />
+
+        <!-- Кнопка для добавления нового ингредиента -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addIngredientButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Добавить ингредиент"
+            android:backgroundTint="@color/buttonColor"
+            android:textColor="@android:color/white"
+            app:cornerRadius="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Кнопка для поиска рецептов -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/searchRecipesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Поиск рецептов"
             android:backgroundTint="@color/buttonColor"
             android:textColor="@android:color/white"
             app:cornerRadius="8dp" />
+
     </LinearLayout>
 </FrameLayout>
