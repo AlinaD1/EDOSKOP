@@ -61,6 +61,7 @@ dependencies {
     // Зависимости для PyTorch
     implementation("org.pytorch:pytorch_android:1.10.0") // Для работы с PyTorch
     implementation("org.pytorch:pytorch_android_torchvision:1.10.0") // Для работы с изображениями
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
 }
 
