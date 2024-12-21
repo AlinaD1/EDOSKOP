@@ -77,9 +77,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="  Изменить профиль"
+                    android:text="Редактирование профиля"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="40sp"
+                    android:textSize="25dp"
                     android:textStyle="bold" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
@@ -164,5 +164,17 @@
             android:text="Вернуться в профиль"
             android:textColor="@android:color/white"
             app:cornerRadius="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deleteAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/buttonColor"
+            android:padding="16dp"
+            android:text="Удалить аккаунт"
+            android:textColor="@android:color/white"
+            app:cornerRadius="12dp" />
+
     </LinearLayout>
 </FrameLayout>

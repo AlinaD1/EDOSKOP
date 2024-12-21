@@ -25,45 +25,48 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     sourceSets {
         getByName("main") {
             assets {
-                srcDirs("src\\main\\assets", "app\\assets")
+                srcDirs("src/main/assets", "app/assets")
             }
         }
     }
 }
 
 dependencies {
-    // Android стандартные зависимости
+    // Android Standard dependencies
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    // Firebase Authentication и Realtime Database
+    // Firebase Authentication and Realtime Database
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
 
-    // Firebase UI для работы с RecyclerView
+    // Firebase UI for RecyclerView
     implementation("com.firebaseui:firebase-ui-database:8.0.1")
-    implementation(libs.ui.graphics.android)
 
-    // Тестовые зависимости
+    // Testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Зависимости для PyTorch
-    implementation("org.pytorch:pytorch_android:1.10.0") // Для работы с PyTorch
-    implementation("org.pytorch:pytorch_android_torchvision:1.10.0") // Для работы с изображениями
+    // PyTorch dependencies for machine learning
+    implementation("org.pytorch:pytorch_android:1.10.0")
+    implementation("org.pytorch:pytorch_android_torchvision:1.10.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
+    // RecyclerView dependency
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
 }
 
-// Применение плагина Google Services для корректной интеграции Firebase
+// Apply the Google Services plugin to integrate Firebase services correctly
 apply(plugin = "com.google.gms.google-services")

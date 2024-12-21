@@ -47,6 +47,11 @@
             android:name=".MyRecipesActivity"
             android:exported="true" />
 
+        <!-- Результаты поиска -->
+        <activity
+            android:name=".RecipeResultsActivity"
+            android:exported="true" /> <!-- Добавлена активность -->
+
         <!-- Поиск рецептов -->
         <activity
             android:name=".SearchRecipesActivity"
@@ -68,18 +73,6 @@
 
         <activity
             android:name=".EditProfileActivity"
-            android:exported="true" />
-
-        <activity
-            android:name=".RecognizedItemsAdapter"
-            android:exported="true" />
-
-        <activity
-            android:name=".NeuralNetworkHelper"
-            android:exported="true" />
-
-        <activity
-            android:name=".Recipe"
             android:exported="true" />
 
 
