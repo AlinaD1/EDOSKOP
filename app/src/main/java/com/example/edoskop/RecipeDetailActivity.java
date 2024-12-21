@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 public class RecipeDetailActivity extends AppCompatActivity {
+
     private String recipeId;
     private DatabaseReference recipeRef;
     private DatabaseReference favoritesRef;
@@ -41,7 +43,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Убираем кнопку "Добавить в избранное", если вызов из FavoritesActivity
         if (fromFavorites) {
             addToFavoritesButton.setVisibility(View.GONE);
         }
@@ -56,7 +57,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
     }
 
-
     private void loadRecipeDetails(TextView recipeName, TextView ingredients, TextView description) {
         recipeRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -67,6 +67,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     description.setText(recipe.getDescription());
                     List<String> ingredientsList = recipe.getIngredients();
                     ingredients.setText(ingredientsList != null ? String.join("\n", ingredientsList) : "Ингредиенты отсутствуют");
+                } else {
+                    Toast.makeText(RecipeDetailActivity.this, "Рецепт не найден", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -78,7 +80,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void addToFavorites() {
-        favoritesRef.child(recipeId).setValue(true).addOnCompleteListener(task -> {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (userId == null) {
+            Toast.makeText(this, "Ошибка: пользователь не найден", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        favoritesRef.child(userId).child(recipeId).setValue(true).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Рецепт добавлен в избранное", Toast.LENGTH_SHORT).show();
             } else {
@@ -87,5 +95,3 @@ public class RecipeDetailActivity extends AppCompatActivity {
         });
     }
 }
-
-

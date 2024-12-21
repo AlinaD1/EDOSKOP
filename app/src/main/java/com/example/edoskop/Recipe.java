@@ -22,16 +22,32 @@ public class Recipe implements Serializable {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id; // Устанавливаем значение ID
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name; // Устанавливаем значение имени
     }
 
     public List<String> getIngredients() {
         return ingredients;
     }
 
+    public void setIngredients(List<String> ingredients) {
+        this.ingredients = ingredients; // Устанавливаем список ингредиентов
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description; // Устанавливаем описание
     }
 }
 

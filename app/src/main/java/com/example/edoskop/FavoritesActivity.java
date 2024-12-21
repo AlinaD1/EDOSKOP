@@ -21,9 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FavoritesActivity extends AppCompatActivity {
+
     private RecyclerView favoritesListView;
-    private List<Recipe> favoriteRecipes;
     private RecipeAdapter recipeAdapter;
+    private List<Recipe> favoriteRecipes = new ArrayList<>();
     private DatabaseReference favoritesRef;
     private String userId;
 
@@ -32,61 +33,73 @@ public class FavoritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        favoritesRef = FirebaseDatabase.getInstance().getReference("Favorites").child(userId);
-
+        // Инициализация RecyclerView
         favoritesListView = findViewById(R.id.favoritesListView);
         favoritesListView.setLayoutManager(new LinearLayoutManager(this));
 
-        favoriteRecipes = new ArrayList<>();
-        recipeAdapter = new RecipeAdapter(this, favoriteRecipes, this::openRecipeDetail);
+        recipeAdapter = new RecipeAdapter(this, favoriteRecipes, recipe -> {
+            // Переход к RecipeDetailActivity
+            Intent intent = new Intent(FavoritesActivity.this, RecipeDetailActivity.class);
+            intent.putExtra("recipeId", recipe.getId());
+            intent.putExtra("fromFavorites", true);
+            startActivity(intent);
+        });
+
         favoritesListView.setAdapter(recipeAdapter);
 
-        loadFavoriteRecipes();
+        // Получение текущего пользователя
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        if (userId == null) {
+            Toast.makeText(this, "Пользователь не найден", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Ссылка на узел избранного
+        favoritesRef = FirebaseDatabase.getInstance().getReference("Favorites");
+
+        loadFavoriteRecipes(); // Загрузка избранных рецептов
     }
 
     private void loadFavoriteRecipes() {
-        favoritesRef.addValueEventListener(new ValueEventListener() {
+        favoritesRef.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                favoriteRecipes.clear();
+                favoriteRecipes.clear(); // Очищаем список перед загрузкой
                 for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-                    String recipeId = recipeSnapshot.getKey();
-                    DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("CommonRecipes").child(recipeId);
-
-                    recipeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Recipe recipe = dataSnapshot.getValue(Recipe.class);
-                            if (recipe != null) {
-                                favoriteRecipes.add(recipe);
-                                recipeAdapter.notifyDataSetChanged();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Log.e("FavoritesActivity", "Ошибка загрузки рецепта", error.toException());
-                        }
-                    });
-                }
-
-                if (favoriteRecipes.isEmpty()) {
-                    Toast.makeText(FavoritesActivity.this, "Избранных рецептов нет", Toast.LENGTH_SHORT).show();
+                    String recipeId = recipeSnapshot.getKey(); // Получаем ID рецепта
+                    if (recipeId != null) {
+                        loadRecipeDetails(recipeId); // Загружаем детали рецепта
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(FavoritesActivity.this, "Ошибка загрузки избранного", Toast.LENGTH_SHORT).show();
+                Log.e("FavoritesActivity", "Ошибка загрузки избранного", error.toException());
+                Toast.makeText(FavoritesActivity.this, "Ошибка загрузки данных", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void openRecipeDetail(Recipe recipe) {
-        Intent intent = new Intent(this, RecipeDetailActivity.class);
-        intent.putExtra("recipeId", recipe.getId());
-        intent.putExtra("fromFavorites", true);
-        startActivity(intent);
+    private void loadRecipeDetails(String recipeId) {
+        DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("CommonRecipes").child(recipeId);
+
+        recipeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Recipe recipe = snapshot.getValue(Recipe.class);
+                if (recipe != null) {
+                    recipe.setId(recipeId); // Сохраняем ID в объекте рецепта
+                    favoriteRecipes.add(recipe); // Добавляем рецепт в список
+                    recipeAdapter.notifyDataSetChanged(); // Обновляем адаптер
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FavoritesActivity", "Ошибка загрузки рецепта", error.toException());
+            }
+        });
     }
 }
