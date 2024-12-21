@@ -10,11 +10,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import android.widget.Button;  // Убедитесь, что импортирован нужный класс
+
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView welcomeTextView;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private Button logoutButton;  // Добавляем переменную для кнопки выхода
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,14 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.editProfileButton).setOnClickListener(view ->
                 startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class))
         );
+
+        // Инициализация и обработка кнопки выхода
+        logoutButton = findViewById(R.id.logoutButton);  // Находим кнопку "Выйти"
+        logoutButton.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut();  // Выход из аккаунта Firebase
+            Toast.makeText(ProfileActivity.this, "Выход выполнен", Toast.LENGTH_SHORT).show();
+            redirectToLogin();  // Переход на экран логина
+        });
     }
 
     private void redirectToLogin() {
@@ -63,3 +74,4 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
     }
 }
+

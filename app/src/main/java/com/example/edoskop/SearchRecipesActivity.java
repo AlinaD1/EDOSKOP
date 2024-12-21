@@ -41,6 +41,8 @@ public class SearchRecipesActivity extends AppCompatActivity {
         Button openCameraButton = findViewById(R.id.openCameraButton);
         Button uploadFromGalleryButton = findViewById(R.id.uploadFromGalleryButton);
         Button addIngredientButton = findViewById(R.id.addIngredientButton);
+        Button searchRecipesButton = findViewById(R.id.searchRecipesButton); // Добавили кнопку поиска
+
         capturedImageView = findViewById(R.id.capturedImageView);
         recognizedItemsListView = findViewById(R.id.recognizedItemsListView);
         newIngredientInput = findViewById(R.id.newIngredientInput);
@@ -52,6 +54,7 @@ public class SearchRecipesActivity extends AppCompatActivity {
         openCameraButton.setOnClickListener(v -> openCamera());
         uploadFromGalleryButton.setOnClickListener(v -> pickImageFromGallery());
         addIngredientButton.setOnClickListener(v -> addNewIngredient());
+        searchRecipesButton.setOnClickListener(v -> searchRecipes()); // Обработчик для кнопки поиска
     }
 
     private void addNewIngredient() {
@@ -133,6 +136,17 @@ public class SearchRecipesActivity extends AppCompatActivity {
                 );
             }
         });
+    }
+
+    private void searchRecipes() {
+        if (recognizedItems.isEmpty()) {
+            Toast.makeText(this, "Список ингредиентов пуст", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(this, RecipeResultsActivity.class);
+        intent.putStringArrayListExtra("recognizedItems", new ArrayList<>(recognizedItems));
+        startActivity(intent);
     }
 
     @Override
