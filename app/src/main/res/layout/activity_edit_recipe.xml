@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -81,7 +80,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="   Редактировать "
+                        android:text="Редактировать"
                         android:textColor="@color/primaryTextColor"
                         android:textSize="40sp"
                         android:textStyle="bold" />
@@ -149,6 +148,30 @@
                 android:backgroundTint="@color/buttonColor"
                 android:padding="16dp"
                 android:text="Сохранить изменения"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp" />
+
+            <!-- Кнопка для удаления рецепта -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteRecipeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/buttonColor"
+                android:padding="16dp"
+                android:text="Удалить рецепт"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp" />
+
+            <!-- Кнопка для возврата к списку рецептов -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/returnToRecipesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/buttonColor"
+                android:padding="16dp"
+                android:text="Вернуться к списку рецептов"
                 android:textColor="@android:color/white"
                 app:cornerRadius="12dp" />
         </LinearLayout>

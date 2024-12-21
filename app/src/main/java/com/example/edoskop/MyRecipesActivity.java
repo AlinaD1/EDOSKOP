@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -24,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MyRecipesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private FirebaseRecyclerAdapter<Recipe, RecipeViewHolder> adapter;
+    private FirebaseRecyclerAdapter<UserRecipe, RecipeViewHolder> adapter;
     private DatabaseReference recipesDatabase;
     private String userId;
 
@@ -33,48 +31,29 @@ public class MyRecipesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_recipes);
 
+        // Инициализация RecyclerView
         recyclerView = findViewById(R.id.recipesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Инициализация Firebase
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        recipesDatabase = FirebaseDatabase.getInstance().getReference("Recipes");
+        recipesDatabase = FirebaseDatabase.getInstance().getReference("Recipes").child(userId);
 
-        FirebaseRecyclerOptions<Recipe> options = new FirebaseRecyclerOptions.Builder<Recipe>()
-                .setQuery(recipesDatabase.orderByChild("userId").equalTo(userId), Recipe.class)
+        // Настройка адаптера Firebase
+        FirebaseRecyclerOptions<UserRecipe> options = new FirebaseRecyclerOptions.Builder<UserRecipe>()
+                .setQuery(recipesDatabase, UserRecipe.class)
                 .build();
 
-        adapter = new FirebaseRecyclerAdapter<Recipe, RecipeViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<UserRecipe, RecipeViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull RecipeViewHolder holder, int position, @NonNull Recipe model) {
+            protected void onBindViewHolder(@NonNull RecipeViewHolder holder, int position, @NonNull UserRecipe model) {
                 holder.recipeName.setText(model.getName());
+                holder.recipeDescription.setText(model.getDescription());
 
-                // Обработка нажатий на рецепт
+                // Переход к экрану редактирования при нажатии на рецепт
                 holder.itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(MyRecipesActivity.this, RecipeDetailActivity.class);
-                    intent.putExtra("recipeId", model.getId());
-                    startActivity(intent);
-                });
-
-                // Удаление рецепта
-                holder.deleteButton.setOnClickListener(v -> {
-                    new MaterialAlertDialogBuilder(MyRecipesActivity.this)
-                            .setTitle("Удалить рецепт")
-                            .setMessage("Вы уверены, что хотите удалить этот рецепт?")
-                            .setPositiveButton("Да", (dialog, which) -> {
-                                String recipeId = getRef(position).getKey();
-                                if (recipeId != null) {
-                                    recipesDatabase.child(recipeId).removeValue().addOnSuccessListener(aVoid ->
-                                            Toast.makeText(MyRecipesActivity.this, "Рецепт удален", Toast.LENGTH_SHORT).show());
-                                }
-                            })
-                            .setNegativeButton("Нет", null)
-                            .show();
-                });
-
-                // Редактирование рецепта
-                holder.editButton.setOnClickListener(v -> {
                     Intent intent = new Intent(MyRecipesActivity.this, EditRecipeActivity.class);
-                    intent.putExtra("recipeId", model.getId());
+                    intent.putExtra("recipeId", model.getId()); // Передаем ID рецепта
                     startActivity(intent);
                 });
             }
@@ -82,7 +61,7 @@ public class MyRecipesActivity extends AppCompatActivity {
             @NonNull
             @Override
             public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item_with_buttons, parent, false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
                 return new RecipeViewHolder(view);
             }
         };
@@ -90,11 +69,15 @@ public class MyRecipesActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         // Кнопка добавления рецепта
-        MaterialButton addRecipeButton = findViewById(R.id.addRecipeButton);
+        Button addRecipeButton = findViewById(R.id.addRecipeButton);
         addRecipeButton.setOnClickListener(v -> {
             Intent intent = new Intent(MyRecipesActivity.this, AddRecipeActivity.class);
             startActivity(intent);
         });
+
+        // Кнопка возвращения в профиль
+        Button returnToProfileButton = findViewById(R.id.returnToProfileButton);
+        returnToProfileButton.setOnClickListener(v -> finish());
     }
 
     @Override
@@ -115,17 +98,19 @@ public class MyRecipesActivity extends AppCompatActivity {
 
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {
         TextView recipeName;
-        MaterialButton deleteButton;
-        MaterialButton editButton;
+        TextView recipeDescription;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
             recipeName = itemView.findViewById(R.id.recipeNameTextView);
-            deleteButton = itemView.findViewById(R.id.deleteButton);
-            editButton = itemView.findViewById(R.id.editButton);
+            recipeDescription = itemView.findViewById(R.id.recipeDescriptionTextView);
         }
     }
 }
+
+
+
+
 
 
 

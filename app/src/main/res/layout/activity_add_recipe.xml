@@ -161,5 +161,19 @@
             android:text="Сохранить рецепт"
             android:textColor="@android:color/white"
             app:cornerRadius="12dp" />
+
+        <!-- Кнопка для возврата к списку рецептов -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/returnToRecipesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/buttonColor"
+            android:padding="16dp"
+            android:text="Вернуться к списку рецептов"
+            android:textColor="@android:color/white"
+            app:cornerRadius="12dp" />
+
+
     </LinearLayout>
 </FrameLayout>
