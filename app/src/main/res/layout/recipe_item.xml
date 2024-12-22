@@ -4,20 +4,29 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp">
-
+    <ImageView
+        android:id="@+id/recipeImageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_recipe_placeholder" />
     <TextView
         android:id="@+id/recipeNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Название рецепта"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_gravity="center_vertical" />
 
     <TextView
         android:id="@+id/recipeDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Описание рецепта"
-        android:textSize="14sp"
+        android:text=""
+        android:textSize="1sp"
         android:paddingTop="4dp" />
+
 </LinearLayout>
+
