@@ -1,22 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/white"
-    android:padding="16dp">
+    tools:context=".FavoritesActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Избранные рецепты"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:paddingBottom="8dp" />
+    <!-- Левые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="-50dp"
+        android:translationY="-50dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/favoritesListView"
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|start"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="-50dp"
+        android:translationY="50dp" />
+
+    <!-- Правые верхний и нижний зеленые углы -->
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="45"
+        android:translationX="50dp"
+        android:translationY="-50dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|end"
+        android:background="@color/greenCornerColor"
+        android:clipToOutline="true"
+        android:rotation="-45"
+        android:translationX="50dp"
+        android:translationY="50dp" />
+
+    <!-- Основное содержимое -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Заголовок "Избранные рецепты" в MaterialCardView -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/backgroundColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Избранные рецепты"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Прозрачная область для списка рецептов -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="16dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/favoritesListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:clipToPadding="false" />
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

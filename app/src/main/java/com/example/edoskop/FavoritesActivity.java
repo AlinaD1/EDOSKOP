@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class FavoritesActivity extends AppCompatActivity {
@@ -38,10 +39,9 @@ public class FavoritesActivity extends AppCompatActivity {
         favoritesListView.setLayoutManager(new LinearLayoutManager(this));
 
         recipeAdapter = new RecipeAdapter(this, favoriteRecipes, recipe -> {
-            // Переход к RecipeDetailActivity
-            Intent intent = new Intent(FavoritesActivity.this, RecipeDetailActivity.class);
+            // Переход к FavRecipeDetailActivity
+            Intent intent = new Intent(FavoritesActivity.this, FavRecipeDetailActivity.class);
             intent.putExtra("recipeId", recipe.getId());
-            intent.putExtra("fromFavorites", true);
             startActivity(intent);
         });
 
@@ -58,18 +58,20 @@ public class FavoritesActivity extends AppCompatActivity {
         // Ссылка на узел избранного
         favoritesRef = FirebaseDatabase.getInstance().getReference("Favorites");
 
-        loadFavoriteRecipes(); // Загрузка избранных рецептов
+        loadFavoriteRecipes();  // Загрузка избранных рецептов
     }
 
     private void loadFavoriteRecipes() {
+        // Очистка списка перед загрузкой
+        favoriteRecipes.clear();
+
         favoritesRef.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                favoriteRecipes.clear(); // Очищаем список перед загрузкой
                 for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-                    String recipeId = recipeSnapshot.getKey(); // Получаем ID рецепта
+                    String recipeId = recipeSnapshot.getKey();
                     if (recipeId != null) {
-                        loadRecipeDetails(recipeId); // Загружаем детали рецепта
+                        loadRecipeDetails(recipeId);
                     }
                 }
             }
@@ -90,9 +92,22 @@ public class FavoritesActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Recipe recipe = snapshot.getValue(Recipe.class);
                 if (recipe != null) {
-                    recipe.setId(recipeId); // Сохраняем ID в объекте рецепта
-                    favoriteRecipes.add(recipe); // Добавляем рецепт в список
-                    recipeAdapter.notifyDataSetChanged(); // Обновляем адаптер
+                    recipe.setId(recipeId);  // Устанавливаем ID в объект рецепта
+
+                    // Проверяем, нет ли уже такого рецепта в списке по ID
+                    boolean isAlreadyAdded = false;
+                    for (Recipe r : favoriteRecipes) {
+                        if (r.getId().equals(recipe.getId())) {
+                            isAlreadyAdded = true;
+                            break;
+                        }
+                    }
+
+                    // Если рецепт еще не добавлен в список, добавляем его
+                    if (!isAlreadyAdded) {
+                        favoriteRecipes.add(recipe);  // Добавляем рецепт в список
+                        recipeAdapter.notifyDataSetChanged();  // Обновляем адаптер
+                    }
                 }
             }
 
@@ -101,5 +116,11 @@ public class FavoritesActivity extends AppCompatActivity {
                 Log.e("FavoritesActivity", "Ошибка загрузки рецепта", error.toException());
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadFavoriteRecipes();  // Перезагружаем список рецептов при возврате в активность
     }
 }
