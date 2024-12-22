@@ -24,7 +24,7 @@ public class NeuralNetworkHelper {
 
     private static final String API_URL = "https://predict.ultralytics.com";
     private static final String API_KEY = "01b7273e903917a0fdb3a3b6bed1c68f1eae8a703e";
-    private static final String MODEL_URL = "https://hub.ultralytics.com/models/oEGPQzz54rE6XMaBcy4K";
+    private static final String MODEL_URL = "https://hub.ultralytics.com/models/fjjW7jOl21o7e8oPP1LC";
     private static final String TAG = "NeuralNetworkHelper";
 
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
