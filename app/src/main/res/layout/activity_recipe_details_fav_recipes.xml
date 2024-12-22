@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
-    tools:context=".RecipeDetailActivity">
+    tools:context=".FavRecipeDetailActivity">
 
     <!-- Левые верхний и нижний зеленые углы -->
     <View
@@ -119,6 +119,24 @@
                 android:textSize="16sp"
                 android:layout_marginBottom="16dp"
                 android:textColor="@color/primaryTextColor" />
+
+            <!-- Кнопки -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/DeleteFromFavoritesButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/buttonColor"
+                    android:text="Убрать из избранного"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="8dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
